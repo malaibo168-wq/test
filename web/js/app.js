@@ -1,11 +1,11 @@
 const CHAINS = [
+  { id: "solana", name: "Solana", tokens: ["SOL", "USDT", "USDC"] },
   { id: "ethereum", name: "Ethereum", tokens: ["ETH", "USDT", "USDC", "WBTC"] },
   { id: "bsc", name: "BNB Chain", tokens: ["BNB", "USDT", "USDC"] },
   { id: "polygon", name: "Polygon", tokens: ["MATIC", "USDT", "USDC"] },
   { id: "arbitrum", name: "Arbitrum", tokens: ["ETH", "USDT", "USDC", "ARB"] },
   { id: "optimism", name: "Optimism", tokens: ["ETH", "USDT", "USDC", "OP"] },
   { id: "base", name: "Base", tokens: ["ETH", "USDC"] },
-  { id: "solana", name: "Solana", tokens: ["SOL", "USDT", "USDC"] },
   { id: "bitcoin", name: "Bitcoin", tokens: ["BTC"] },
   { id: "tron", name: "Tron", tokens: ["TRX", "USDT"] },
 ];
@@ -27,7 +27,7 @@ const PRICES = {
 const BRIDGES = ["Stargate", "LayerZero", "Axelar", "Wormhole", "THORChain", "Across"];
 
 const state = {
-  from: { chain: "ethereum", token: "ETH" },
+  from: { chain: "solana", token: "SOL" },
   to: { chain: "bsc", token: "USDT" },
   picking: "from",
   slippage: 0.5,
