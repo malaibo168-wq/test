@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FlashBridge · 跨链闪兑</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="bg">
+      <div class="orb orb-a"></div>
+      <div class="orb orb-b"></div>
+      <div class="grid"></div>
+    </div>
+
+    <header class="topbar">
+      <div class="brand">
+        <span class="logo">⚡</span>
+        <div>
+          <strong>FlashBridge</strong>
+          <small>跨链闪兑</small>
+        </div>
+      </div>
+      <nav>
+        <button class="nav-btn active" data-view="swap">闪兑</button>
+        <button class="nav-btn" data-view="history">记录</button>
+        <button class="nav-btn" data-view="routes">路由</button>
+      </nav>
+      <button id="connectBtn" class="connect">连接钱包</button>
+    </header>
+
+    <main>
+      <section id="view-swap" class="view">
+        <div class="hero">
+          <h1>任意链，秒级到账</h1>
+          <p>聚合多桥与 DEX，自动挑选最低损耗路径。演示报价，不上链。</p>
+        </div>
+
+        <div class="swap-card">
+          <div class="card-head">
+            <span>闪兑</span>
+            <button id="settingsBtn" class="icon-btn" title="滑点设置">⚙</button>
+          </div>
+
+          <div class="leg">
+            <div class="leg-meta">
+              <span>支付</span>
+              <span id="fromBalance">余额 --</span>
+            </div>
+            <div class="leg-row">
+              <input id="fromAmount" type="number" min="0" step="any" placeholder="0.0" />
+              <button class="asset-btn" id="fromAssetBtn">
+                <span class="dot" data-chain="ethereum"></span>
+                <span id="fromLabel">ETH · Ethereum</span>
+                ▾
+              </button>
+            </div>
+            <div class="quick">
+              <button data-pct="25">25%</button>
+              <button data-pct="50">50%</button>
+              <button data-pct="100">MAX</button>
+            </div>
+          </div>
+
+          <button id="flipBtn" class="flip" title="对调">⇅</button>
+
+          <div class="leg">
+            <div class="leg-meta">
+              <span>收到（预估）</span>
+              <span id="toBalance">余额 --</span>
+            </div>
+            <div class="leg-row">
+              <input id="toAmount" type="text" readonly placeholder="0.0" />
+              <button class="asset-btn" id="toAssetBtn">
+                <span class="dot" data-chain="bsc"></span>
+                <span id="toLabel">USDT · BNB Chain</span>
+                ▾
+              </button>
+            </div>
+          </div>
+
+          <div id="quoteBox" class="quote hidden">
+            <div class="quote-row">
+              <span>参考汇率</span>
+              <strong id="rateText">--</strong>
+            </div>
+            <div class="quote-row">
+              <span>预估到账</span>
+              <strong id="etaText">--</strong>
+            </div>
+            <div class="quote-row">
+              <span>跨链 + Gas</span>
+              <strong id="feeText">--</strong>
+            </div>
+            <div class="quote-row">
+              <span>滑点上限</span>
+              <strong id="slipText">0.5%</strong>
+            </div>
+            <div class="route" id="routeText"></div>
+          </div>
+
+          <button id="swapBtn" class="primary" disabled>输入金额</button>
+          <p class="disclaimer">演示界面：报价为本地模拟，不会广播真实交易。</p>
+        </div>
+      </section>
+
+      <section id="view-history" class="view hidden">
+        <div class="panel">
+          <h2>闪兑记录</h2>
+          <ul id="historyList" class="history"></ul>
+        </div>
+      </section>
+
+      <section id="view-routes" class="view hidden">
+        <div class="panel">
+          <h2>支持的路径</h2>
+          <div class="chain-grid" id="chainGrid"></div>
+        </div>
+      </section>
+    </main>
+
+    <div id="picker" class="modal hidden">
+      <div class="sheet">
+        <div class="sheet-head">
+          <h3 id="pickerTitle">选择资产</h3>
+          <button class="icon-btn" data-close="picker">✕</button>
+        </div>
+        <input id="pickerSearch" type="search" placeholder="搜索链或代币" />
+        <div id="pickerList" class="picker-list"></div>
+      </div>
+    </div>
+
+    <div id="settings" class="modal hidden">
+      <div class="sheet small">
+        <div class="sheet-head">
+          <h3>交易设置</h3>
+          <button class="icon-btn" data-close="settings">✕</button>
+        </div>
+        <label>滑点容忍度</label>
+        <div class="slip-row">
+          <button class="chip" data-slip="0.1">0.1%</button>
+          <button class="chip active" data-slip="0.5">0.5%</button>
+          <button class="chip" data-slip="1">1%</button>
+          <input id="customSlip" type="number" min="0.05" max="5" step="0.05" placeholder="自定义 %" />
+        </div>
+        <label>收款地址（可选）</label>
+        <input id="recvAddr" type="text" placeholder="默认为已连接钱包" />
+      </div>
+    </div>
+
+    <div id="wallet" class="modal hidden">
+      <div class="sheet small">
+        <div class="sheet-head">
+          <h3>连接钱包</h3>
+          <button class="icon-btn" data-close="wallet">✕</button>
+        </div>
+        <button class="wallet-opt" data-wallet="demo">演示钱包（本地）</button>
+        <button class="wallet-opt" data-wallet="injected">浏览器钱包</button>
+        <p class="hint">未检测到扩展时会使用演示地址，便于预览完整流程。</p>
+      </div>
+    </div>
+
+    <div id="confirm" class="modal hidden">
+      <div class="sheet">
+        <div class="sheet-head">
+          <h3>确认闪兑</h3>
+          <button class="icon-btn" data-close="confirm">✕</button>
+        </div>
+        <div id="confirmBody" class="confirm-body"></div>
+        <button id="confirmBtn" class="primary">确认并模拟提交</button>
+      </div>
+    </div>
+
+    <script src="js/app.js"></script>
+  </body>
+</html>
