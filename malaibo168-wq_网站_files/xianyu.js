@@ -994,6 +994,8 @@
       return;
     }
     state.pendingImage = "";
+    state.keyword = "";
+    state.category = "推荐";
     toast("已上架");
     if (location.hash !== "#/") location.hash = "#/";
     else render();
